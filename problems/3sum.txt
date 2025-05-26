@@ -1,0 +1,94 @@
+Given an integer array nums, return all the triplets [nums[i], nums[j], nums[k]] such that i != j, i != k, and j != k, and nums[i] + nums[j] + nums[k] == 0.
+
+Notice that the solution set must not contain duplicate triplets.
+
+ 
+
+Example 1:
+
+Input: nums = [-1,0,1,2,-1,-4]
+			  [-4,-1,-1,0,1,2]
+Output: [[-1,-1,2],[-1,0,1]]
+Explanation: 
+nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0.
+nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0.
+nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0.
+The distinct triplets are [-1,0,1] and [-1,-1,2].
+Notice that the order of the output and the order of the triplets does not matter.
+
+Example 2:
+
+Input: nums = [0,1,1]
+Output: []
+Explanation: The only possible triplet does not sum up to 0.
+Example 3:
+
+Input: nums = [0,0,0]
+Output: [[0,0,0]]
+Explanation: The only possible triplet sums up to 0.
+ 
+
+Constraints:
+
+3 <= nums.length <= 3000
+-105 <= nums[i] <= 105
+
+
+
+Approaches:
+
+Approach 1:
+Set the first element, iterating on second element and then iterating on third element. This will result in 3 loops for i, j and k.
+TC: O(n^3)
+SC: O(size of ans hashset)
+
+Approach 2:
+Set the first element and finding other 2 elements in the remaining sublist will essentially be two sum problem using 2 pointers. Calculate the sum and check if the sum > 0, decrementing the high pointer and if sum < 0, incrementing the low pointer. If the sum is equal is 0, we sort the triplet and appendto our ans hashset (which helps in finding unique triplets)
+
+TC: O(n^2) + O(sort the triplet)
+SC: O(size of ans hashset)
+
+Approach 3:
+Sort the list.
+Set the first element and this time finding other 2 elements in the remaining sublist will essentially be two sum II problem using 2 pointers. Calculate the sum and check if sum > 0, decrementing the high pointer to next unique element and if sum < 0, incrementing the low pointer to the next unique element. If the sum is equal is 0, we append the triplet to our ans hashset (which helps in finding unique triplets).
+TC: O(n logn) + O(n^2)
+SC: O(size of result list) if it counts or O(1)
+
+Code:
+
+def threeSum(nums) -> List[List[int]]:
+	res = []
+	
+	nums.sort() #in-place sorting
+	
+	for i in range(len(nums)):
+		if i > 0 and nums[i] == nums[i-1]:
+			continue # skip duplicates i
+		j = i + 1
+		k = len(nums) - 1
+		
+		while j < k:
+			sum = nums[i] + nums[j] + nums[k]
+			
+			if sum > 0:
+				k -= 1
+			elif sum < 0:
+				j += 1
+			else:
+				res.append([nums[i], nums[j], nums[k]])
+				 
+				#Skipping duplicates j and k
+				while j < k and nums[j] == nums[j + 1]:
+					j += 1
+				while j < k and nums[k] == nums[k - 1]:
+					k -= 1
+				
+				k -= 1
+				j += 1
+		
+	return res
+		
+		
+				
+
+

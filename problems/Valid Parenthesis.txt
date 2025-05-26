@@ -1,0 +1,80 @@
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+Open brackets must be closed by the same type of brackets.
+Open brackets must be closed in the correct order.
+Every close bracket has a corresponding open bracket of the same type.
+ 
+
+Example 1:
+
+Input: s = "()"
+Output: true
+
+Example 2:
+
+Input: s = "()[]{}"
+Output: true
+
+Example 3:
+
+Input: s = "()]"
+Output: false
+
+Example 4:
+
+Input: s = "([])"
+Output: true
+
+
+Constraints:
+
+1 <= s.length <= 104
+s consists of parentheses only '()[]{}'
+
+
+Approach:
+
+- Maintain an hashmap of opening and closing brackets (key: , value: )
+- Scan through the string
+	- If we encounter opening bracket, we push it to the stack
+	- If we encounter closing bracket, we pop it from the stack and check it's equivalent bracket. If it matches, we move on to the next iteration. If it doesn't matches, we know it is an unbalanced string and we return False.
+- If the stack becomes empty, we know it is a balanced string and we return True.
+- If the stack has some elements left, we know it is a unbalanced string and we return False.
+
+
+def valid_parenthesis(s) -> bool:	
+	parenthesis = {
+		"(" : ")",
+		"{" : "}",
+		"[" : "]"
+	}
+	
+	stack = []
+	i = 0
+	while i < len(s):
+		if s[i] in parenthesis:
+			stack.append(s[i])
+		else:
+			if len(stack) == 0:
+				return False
+
+			pop_ele = stack.pop()
+			
+			if parenthesis[pop_ele] != s[i]:
+				return False
+		i += 1
+	return len(stack) == 0
+	
+
+S: "( ( ( ("
+    l     r
+    
+S: "(()[[])"
+	
+
+TC: O(n) where n is len(s)
+SC: O(n)	
+		
+	
