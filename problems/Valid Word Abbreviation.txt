@@ -1,0 +1,110 @@
+Question:
+A string can be abbreviated by replacing any number of non-adjacent, non-empty substrings with their lengths. The lengths should not have leading zeros.
+
+For example, a string such as "substitution" could be abbreviated as (but not limited to):
+
+"s10n" ("s ubstitutio n")
+"sub4u4" ("sub stit u tion")
+"12" ("substitution")
+"su3i1u2on" ("su bst i t u ti on")
+"substitution" (no substrings replaced)
+The following are not valid abbreviations:
+
+"s55n" ("s ubsti tutio n", the replaced substrings are adjacent)
+"s010n" (has leading zeros)
+"s0ubstitution" (replaces an empty substring)
+Given a string word and an abbreviation abbr, return whether the string matches the given abbreviation.
+
+A substring is a contiguous non-empty sequence of characters within a string.
+
+ 
+
+Example 1:
+
+Input: word = "internationalization", abbr = "i12iz4n"
+Output: true
+Explanation: The word "internationalization" can be abbreviated as "i12iz4n" ("i nternational iz atio n").
+Example 2:
+
+Input: word = "apple", abbr = "a2e"
+Output: false
+Explanation: The word "apple" cannot be abbreviated as "a2e".
+ 
+
+Constraints:
+
+1 <= word.length <= 20
+word consists of only lowercase English letters.
+1 <= abbr.length <= 10
+abbr consists of lowercase English letters and digits.
+All the integers in abbr will fit in a 32-bit integer.
+
+------------------------------------------------------------------
+
+Clarifying Questions/Observations:
+- Max abbr integer would go till word length i.e 20
+- abbr can't be 0 as word length min value is 1, also abbr can't start with leading zero
+
+Approaches:
+
+Approach 1 (Naive):
+- Calculate all possible Abbreviation of the input word and match the input abbr with our generated Abbreviation.
+- For calculating each possible abbr of the input word, we run a nested loop , placing each char and then given the len of the word, generating possible abbr for this char.
+
+TC:
+- O(n^2) for nested loop, going over each char
+- O(n) for matching each word
+Final TC: O(n^2)
+
+SC: 0(n^2) for storing possible abbr in a list/hashmap
+
+Approach 2 (Better):
+- We just need to check if the input abbr is valid abbr of the give word. So, we can actually traverse this input abbr string, placing a pointer here and one pointer to the actual input word.
+	- If we encounter a leading 0 in abbr, we can return False (given condition in the question)
+	- At any point if the char is not matching, we return False
+	- If we encounter any integer, we move our word pointer that many times ahead. To handle multiple digits, we run an inner loop untill we encounter all the digits and convert into a integer.
+- Once the traversal is over for both the input word and abbr string, we know the abbr is a valid abbreviation of the word and we return True
+
+TC: 
+O(n + m) where n is the len of the word an m is the len of the abbr
+
+SC: O(1) as no extra space is used
+
+
+Code:
+
+def validWordAbbreviation(word, abbr) -> bool:
+	abbr_ptr = word_ptr = 0
+	
+	
+	
+	# Traversing through whole word
+	while abbr_ptr < len(abbr) and word_ptr < len(word):
+		
+		
+		#Check if it is valid char
+		if abbr[abbr_ptr].isalpha():
+			#Check if both char matches or not
+			if abbr[abbr_ptr] != word[word_ptr]:
+				return False
+			abbr_ptr += 1
+			word_ptr += 1
+		# Case where we encounter digits/integers
+		else:
+			# Check leading zero case 
+			if abbr[abbr_ptr] == '0':
+				return False
+			sublen = 0
+			#Traversing untill we encounter the digits
+			while abbr_ptr < len(abbr) and abbr[abbr_ptr].isdigit():
+				sublen = sublen*10 + int(abbr[abbr_ptr])
+				abbr_ptr += 1
+				
+			word_ptr += sublen
+			
+
+	return abbr_ptr == len(abbr) and word_ptr == len(word)
+
+
+		
+			
