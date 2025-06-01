@@ -1,0 +1,93 @@
+Question:
+Given head, the head of a linked list, determine if the linked list has a cycle in it.
+
+There is a cycle in a linked list if there is some node in the list that can be reached again by continuously following the next pointer. Internally, pos is used to denote the index of the node that tail's next pointer is connected to. Note that pos is not passed as a parameter.
+
+Return true if there is a cycle in the linked list. Otherwise, return false.
+
+ 
+
+Example 1:
+
+
+Input: head = [3,2,0,-4], pos = 1
+
+set = []
+
+Output: true
+Explanation: There is a cycle in the linked list, where the tail connects to the 1st node (0-indexed).
+Example 2:
+
+
+Input: head = [1,2], pos = 0
+Output: true
+Explanation: There is a cycle in the linked list, where the tail connects to the 0th node.
+Example 3:
+
+
+Input: head = [1], pos = -1
+Output: false
+Explanation: There is no cycle in the linked list.
+
+Clarifying Questions/Thoughts:
+
+- Will there be cycles if the list only contains one node? Is self node cycle is allowed? Yes
+- Will there be one cycle/multiple cycles? One Cycle or Multiple Cycles
+- Are these node values unique? No
+
+--------------------------------------
+
+Approaches:
+
+Assuming node values is unique and only one cycle is allowed with self cycle been also allowed.
+
+Approach 1:
+- We can keep track of the nodes and it's next nodes in a separate data structure (say set)
+- Whenever we encounter the next node of any curr node to be found in the set, we can say that it forms a cycle and we can return true
+- If the next node of this curr node is not in the set, we can add it.
+- If this iteration is complete then we know that it doesn't forms a cycle and we return false
+
+TC: O(n)
+SC: O(n)
+where n is the size of the list
+
+Code:
+
+def hasCycle(head) -> bool:
+	if head is None:
+		return False
+	visited = set()
+	visited.add(head)
+	curr = head
+	while curr.next != None:
+		if curr.next in visited:
+			return True
+		else:
+			visited.add(curr.next)
+			curr = curr.next
+	return False
+
+Approach 2 (Space Optimized):
+- Using Two pointer technique (fast and slow), we can detect cycle in this list.
+- We will put both these pointer to head first and while traversing the list, fast pointer will move two steps ahead and slow pointer will move one step ahead. If there is a cycle, they will surely meet at some point and we can return True in that case.
+- If the iteration is complete and the execution is out of that iteration, then we know that there is no cycle and we return False in that case
+- No extra space is utilized
+
+TC: O(n) where n is the input list size
+SC: O(1) as only two pointers are used
+
+Code:
+
+def hasCycle(head) -> bool:
+	if head is None:
+		return False
+	
+	fast = slow = head	
+	
+	while fast and fast.next:
+		fast = fast.next.next
+		slow = slow.next
+		
+		if fast == slow:
+			return True
+	return False	

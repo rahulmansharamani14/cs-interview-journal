@@ -64,5 +64,38 @@ def productExceptSelf(nums):
 	for i in range(n):
 		ans[i] = prefix_product_list[i]*suffix_product_list[i]
 	return ans
+
+Approach 3 (Better in terms of space):
+
+- Instead of having two separate list to calculate prefix and suffix products, we can directly utilize our answer list (assuming answer list doesn't count towards extra space)
+- This way we can solve this problem in O(1) space
+
+Code:
+
+def productExceptSelf(nums):
+	
+	n = len(nums)
+	ans = [1]* n
+	prefix_product = 1
+	suffix_product = 1
+	
+	#prefix prod calculation
+	for i in range(1, n):
+		prefix_product *= nums[i-1]
+		ans[i] = prefix_product
+	
+	#suffix prod calculation
+	for i in range(n-2, -1, -1):
+		suffix_product *= nums[i+1]
+		ans[i] *= suffix_product
+
+	
+	return ans
+	
+	
 		
+	
+	
+	
+
 	
