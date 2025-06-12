@@ -1,0 +1,60 @@
+Given a valid (IPv4) IP address, return a defanged version of that IP address.
+
+A defanged IP address replaces every period "." with "[.]".
+
+ 
+
+Example 1:
+
+Input: address = "1.1.1.1"
+Output: "1[.]1[.]1[.]1"
+Example 2:
+
+Input: address = "255.100.50.0"
+Output: "255[.]100[.]50[.]0"
+ 
+
+Constraints:
+
+The given address is a valid IPv4 address.
+------------------------------------------------
+Initial Thoughts/Clarifying Questions:
+- Do we have to do in-place or a new string for address is acceptable?
+- Are we guaranteed to have a valid IPv4 address in the input
+
+Approaches:
+
+Approach 1:
+- We can copy each char/num from the input address to the result string and whenever "." comes, attach "[.]" to the result string
+
+TC: O(n)
+SC: O(n)
+
+Code:
+
+def defangIPaddr(address: str) -> str:
+	defangAddr = ""
+	
+	for i in range(len(address)):
+		if address[i] == "." and address[i + 1] != ".":
+			defangAddr += "[.]"
+		else:
+			defangAddr += address[i]
+	return defangAddr
+	
+Approach 2:
+- Since we know that the input is always gonna be a IPv4 address, we can directly modify the input address.
+
+TC: O(n)
+SC: O(1)
+ 
+Code:
+
+def defangIPaddr(address: str) -> str:
+	res = ""
+	for i in range(len(address)):
+		res += address[i]
+		res
+		
+	
+ 
