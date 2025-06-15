@@ -1,0 +1,78 @@
+Question:
+Given the head of a singly linked list, reverse the list, and return the reversed list.
+
+
+Example 1:
+
+
+Input: head = [1,2,3,4,5]
+Output: [5,4,3,2,1]
+
+
+Example 2:
+
+
+Input: head = [1,2]
+Output: [2,1]
+Example 3:
+
+Input: head = []
+Output: []
+ 
+
+Constraints:
+
+The number of nodes in the list is the range [0, 5000].
+-5000 <= Node.val <= 5000
+ 
+
+Follow up: A linked list can be reversed either iteratively or recursively. Could you implement both?
+------------------------------------------------------------------------------------------------
+
+Initial Thoughts/Questions:
+- Can we expect the input list to have 0 nodes or single node? Yes
+
+Approaches:
+
+Approach 1 (Iterative):
+- We can use two pointers to traverse through the list, effectively updating (reversing) the next pointers as we traverse.
+- We also need to get hold of the next node using some temp variable so that we do not break any link during the process
+
+TC: O(n) with single pass
+SC: O(1) as no extra data structure is required 
+
+Code:
+
+def reverseList(head: Optional[ListNode]) -> Optional[ListNode]:
+	prev = None
+	curr = head
+	
+	while curr:
+		temp = curr.next
+		curr.next = prev
+		prev = curr
+		curr = temp
+		
+	return prev
+	
+Approach 2 (Recursive):
+
+Code:
+
+def reverseList(head):
+	prev = None
+	curr = head
+	
+	return reverseL(prev, curr)
+	
+def reverseL(prev, curr):
+	if curr is None:
+		return prev
+	temp = curr.next
+	curr.next = prev
+	prev = curr
+	curr = temp
+	reverseL(prev, curr)
+
+
+
