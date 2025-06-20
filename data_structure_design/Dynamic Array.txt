@@ -1,0 +1,114 @@
+
+# # Implement Dynamic Array
+
+# Assume your programming language only supports fixed-size arrays. Implement a dynamic array data structure that supports the following:
+
+# `Dynamic Array API:`
+
+# - `append(x)`: adds element x to the end of the array
+# - `get(i)`: returns the element at index i
+# - `set(i, x)`: updates the preexisting element at index i to be x
+# - `size()`: returns the number of elements in the array
+# - `pop_back()`: removes the last element
+
+# You should only declare arrays of a fixed size and not use built-in `append()` methods or equivalent. If you are coding in a strongly typed language, assume all elements are integers.
+
+# ```
+# Example 1:
+# d = DynamicArray()
+# d.append(1)
+# d.append(2)
+# d.get(0)  # returns 1
+# d.get(1)  # returns 2
+# d.size()  # returns 2
+
+# Example 2:
+# d = DynamicArray()
+# d.append(1)
+# d.set(0, 10)
+# d.get(0)  # returns 10
+
+# Example 3:
+# d = DynamicArray()
+# d.append(1)
+# d.append(2)
+# d.pop_back()
+# d.size()  # returns 1
+# d.get(0)  # returns 1
+# ```
+
+# Constraints:
+
+# - All operations should work with arrays of up to 10^6 elements
+# - All integer elements are between -10^9 and 10^9
+
+class DynamicArray():
+    def __init__(self) -> None:
+        self.capacity = 10 #Reasonable Design Choice
+        self.arr = [None] * self.capacity #Note: Simulating this arr is of fixed size
+        self.curr_size = 0
+
+    def append(self, x) -> None:
+        '''
+        TC: O(1) for most cases, O(n) when capacity max out
+        SC: Same as TC
+        '''
+        if self.curr_size < self.capacity:
+            self.arr[self.curr_size] = x
+            self.curr_size += 1 #Updating current size
+        else:
+            self.capacity *= 2 #Updating class variables (capacity)
+            new_arr = [None] * (self.capacity) #Simulating this new_arr would be double the size of arr (Reasonable assumption)
+
+            for i in range(len(self.arr)):
+                new_arr[i] = self.arr[i]
+            
+            self.arr = new_arr #Updating class variables (arr)
+
+    def get(self, i) -> int:
+        '''
+        TC and SC: O(1)
+        '''
+        #Check for index out of range condition
+        if i >= self.curr_size:
+            raise Exception("Index out of range")
+        return self.arr[i]
+    
+    def set(self, i, x) -> None:
+        '''
+        TC and SC: O(1)
+        '''
+        #Check for index out of range condition
+        if i >= self.curr_size:
+            raise Exception("Index out of range")
+
+        self.arr[i] = x
+        
+    
+    def size(self) -> int:
+        '''
+        TC and SC: O(1)
+        '''
+        return self.curr_size
+    
+    def pop_back(self) -> None:
+        '''
+        TC and SC: O(1)
+        '''
+        #Check if the arr is empty
+        if self.curr_size:
+            self.arr[self.curr_size - 1] = None
+            self.curr_size -= 1
+        
+        #Case where the array is too small (reasonable assumption: less than 1/4 or 25% of existing array)
+        if self.curr_size < (self.capacity // 4):
+            self.capacity = self.capacity // 4
+        
+            new_arr = [None] * self.capacity
+
+            for i in range(len(self.arr)):
+                new_arr[i] = self.arr[i]
+
+            self.arr = new_arr
+        
+
