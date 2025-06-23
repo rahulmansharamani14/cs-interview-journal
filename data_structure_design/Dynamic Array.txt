@@ -111,4 +111,76 @@ class DynamicArray():
 
             self.arr = new_arr
         
+    def pop(self, i) -> int:
+        '''
+        TC: O(n) in thw worst case
+        SC: O(1) most of the time, O(n) in the case wehn resizing happens
+        '''
+        #Check given index is in range
+        if i < 0 or i > self.curr_size:
+            raise Exception("Index out of range")
+         
+        element = self.arr[i]
 
+        for index in range(i, self.curr_size - 1):
+            self.arr[index] = self.arr[index + 1]
+        
+        self.curr_size -= 1
+
+        #Additional Check if after pop operation, it becomes less then 25% of the capacity
+        if self.curr_size < self.capacity // 4:
+            self._resize(self.capacity // 4)
+        
+        return element
+
+
+    def contains(self, x) -> bool:
+        '''
+        TC: O(n)
+        SC: O(1)
+        '''
+        for i in range(self.curr_size):
+            if self.arr[i] == x:
+                return True
+            
+        return False
+    
+    def insert(self, i, x) -> None:
+        '''
+        TC: O(n) in thw worst case
+        SC: O(1) most of time, O(n) when resizeing happens
+        '''
+        #Check given index is in range:
+        if i < 0 or i >= self.curr_size:
+            raise Exception("Index out of range")
+        
+        #Check if we have more capacity to add element
+
+        if not self.capacity > self.curr_size:
+            self._resize(self.capacity * 2) #resize the array
+
+        for index in range(self.curr_size, i-1, -1):
+                self.arr[index+1] = self.arr[index]
+
+        self.curr_size += 1
+        self.arr[i] = x
+
+    def remove(self, x) -> int:
+        '''
+        TC: same as pop method: O(n)
+        SC: same as pop method: O(1)
+        '''
+        for i in range(self.curr_size):
+            if self.arr[i] == x:
+                self.pop(i)
+                return i
+        return -1
+
+    
+    def _resize(self, capacity) -> None:
+        new_arr = [None] * capacity
+
+        for i in range(self.curr_size):
+            new_arr[i] = self.arr[i]
+        
+        self.arr = new_arr
