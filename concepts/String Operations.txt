@@ -1,0 +1,98 @@
+
+# # String Join
+
+# Without using a built-in string join method, implement a `join(arr, s)` method, which receives an array of strings, `arr`, and a string, `s`, and returns a single string consisting of the strings in `arr` with `s` in between them.
+
+# ```
+# Example 1: arr = ["join", "by", "space"], s = " "
+# Output: "join by space"
+
+# Example 2: arr = ["b", "", "k", "", "p", "r n", "", "d", "d!!"], s = "ee"
+# Output: "beeeekeeeepeer neeeedeed!!"
+
+# Example 3: arr = [], s = "x"
+# Output: ""
+# ```
+
+# If strings in your language are immutable, assume that you have access to a function `array_to_string(arr)`, which takes an array of individual characters and returns a string with those characters in `O(len(arr))` time.
+
+# Constraints:
+
+# - 0 <= s.length <= 500
+# - 0 <= arr.length <= 10^5
+# - 0 <= arr[i].length <= 10^5
+# - the sum of the lengths of the strings in `arr` is at most 10^5
+
+def join(arr, s: str) -> str:
+    lengthOfArray = len(arr)
+    if lengthOfArray == 0: return ""
+    new_arr = []
+
+    for i in range(lengthOfArray):
+        for char in arr[i]:
+            new_arr.append(arr[i][char])
+        if i == lengthOfArray - 1:
+            continue
+        new_arr.append(s)
+
+    return array_to_string(new_arr)
+
+----------------------------------------------------------------------------------------
+
+
+
+# # String Matching
+
+# Implement an `index_of(s, t)` method, which returns the first index where string `t` appears in string `s`, or -1 if `s` does not contain `t`.
+
+# ```
+# Example 1: s = "hello world", t = "world"
+# Output: 6
+
+# Example 2: s = "needle in a haystack", t = "needle"
+# Output: 0
+
+# Example 3: s = "needle in a haystack", t = "not"
+# Output: -1
+# ```
+
+# Constraints:
+
+# - The input strings can contain any valid ASCII character
+# - The length of s is at most 10^5
+# - The length of t is at most 10^5
+# - t can be empty, in which case return 0
+# - s can be empty, in which case return -1 if t is non-empty, 0 if t is empty
+
+def index_of(s: str, t: str) -> int:
+    '''
+    TC: O(len(s) * len(t))
+    SC: O(1)
+    '''
+    lengthOfT = len(t)
+    lengthOfS = len(s)
+    if lengthOfT == 0: return 0
+    if lengthOfS == 0: return -1
+
+
+    for i in range(lengthOfS - lengthOfT + 1):
+        for j in range(lengthOfT):
+            if s[i+j] != t[j]: #Checking each char in s and t
+                break
+
+            if j == lengthOfT - 1: #Condition to check if we visited the whole t and matched in s
+                return i
+
+    # t is not present in s at this time
+    return -1 
+
+
+
+
+        
+
+
+
+
+        
+        
