@@ -1,0 +1,95 @@
+Question:
+Given two integer arrays nums1 and nums2, return an array of their intersection. Each element in the result must be unique and you may return the result in any order.
+
+ 
+
+Example 1:
+
+Input: nums1 = [1,2,2,1], nums2 = [2,2]
+Output: [2]
+Example 2:
+
+Input: nums1 = [4,9,5], nums2 = [9,4,9,8,4]
+Output: [9,4]
+Explanation: [4,9] is also accepted.
+ 
+
+Constraints:
+
+1 <= nums1.length, nums2.length <= 1000
+0 <= nums1[i], nums2[i] <= 1000
+
+-------------------------------------------------------------------------------------------------------
+
+
+Approaches:
+
+Approach 1: We could sort both of the input array and then use two pointer approach to traverse both the array. If the values at both pointers match, we add that to our final set and move both pointers forward. If they don't match we move one of the pointer (which has smaller value). We go till the end of either one of them, whoever comes first. Then we will convert our set into the array and return it. We will use set internally as we want to keep unique vales in our final array.
+
+If len(arr1) is m and len(arr2) is n:
+TC: O(mlog m + nlogn + O(min(m,n))
+SC: O(min(m,n))
+
+Code:
+
+def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+	if not nums1 or not nums2:
+		return []
+	nums1.sort()
+	nums2.sort()
+	
+	res = set()
+	p1 , p2 = 0 , 0
+	
+	while p1 < len(nums1) and p2 < len(nums2):
+		if nums1[p1] == nums2[p2]:
+			res.add(nums[p1])
+			p1 += 1
+			p2 += 1
+		elif nums1[p1] < nums2[p2]:
+			p1 += 1
+		else:
+			p2 += 1
+			
+	return list(res)
+	
+Can we do Better?
+
+Approach 2: Using a Hashmap/dictinary
+We could create a hashmap of smallest input array (key: element and value: 1) and then travers through the other array, checking each value in the hashmap. If it is present in the hashmap, we add that value to our final array and mark that element as 0 in the hashmap to preserve our unique elements in our final array condition. 
+
+If len(arr1) is m and len(arr2) is n:
+
+TC: O(m + n)
+SC: O(min(m,n)) for hashmap
+
+
+Code:
+
+def intersection(self, nums1: List[int], nums2: List[int]) -> List[int]:
+	if not nums1 or not nums2: return []
+	
+	res = []
+	seen = {}
+	small_array = large_array = []
+	
+	if len(nums1) < len(nums2):
+		small_array = nums1
+		large_array = nums2
+	else:
+		small_array = nums2
+		large_array = nums1
+	
+	for num in small_array:
+		if num not in seen:
+			seen[num] = 1
+	
+	for num in large_array:
+		if num in seen and seen[num] == 1:
+			res.append(num)
+			seen[num] = 0
+	return res
+	
+	
+
+	
