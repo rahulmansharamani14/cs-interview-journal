@@ -1,0 +1,85 @@
+Question:
+You are given an integer mountain array arr of length n where the values increase to a peak element and then decrease.
+
+Return the index of the peak element.
+
+Your task is to solve it in O(log(n)) time complexity.
+
+ 
+
+Example 1:
+
+Input: arr = [0,1,0]
+
+Output: 1
+
+Example 2:
+
+Input: arr = [0,2,1,0]
+
+Output: 1
+
+Example 3:
+
+Input: arr = [0,10,5,2]
+
+Output: 1
+
+ 
+
+Constraints:
+
+3 <= arr.length <= 105
+0 <= arr[i] <= 106
+arr is guaranteed to be a mountain array.
+---------------------------------------------------------------
+
+Thoughts/Follow-up Questions:
+- Can array with single element is also considered an mountain array like [1]?
+- Can strictly decreasing array with just two elements like [2,1] is also considered an mountain array?
+
+Approaches:
+
+Approach 1: If O(log n) was not mentioned in the question
+- We could simply find the max element from the array and return it's index in O(n) linear time.
+
+Approach 2: Using Binary Search
+- As we have given this mountain array, we know that the peak index would follow this rule A[p - 1] < A[p] > A[p + 1].
+- We can use binary search placing our left and right pointers at the extreme of the array and finding mid value, checking if this mid value follows the above rule. We have three cases in our algorithm:
+
+	- If mid is the peak element
+	- If mid lies before peak element (search space would be on the right side)
+	- If mid lies after peak element (search space would be on the left side)
+	
+TC: O(log n)
+Sc: O(1)
+
+Code:
+
+def peakIndexInMountainArray(self, arr: List[int]) -> int:
+	l, r = 0, len(arr) - 1
+	
+	while l < r:
+		mid = l + (r-l)//2
+		
+		# Case: mid is the peak element
+		if arr[mid - 1] < arr[mid] > arr[mid + 1]:
+			return mid
+			
+		
+		if arr[mid + 1] > arr[mid]:
+			# Case: mid lies before peak element
+			l = mid + 1
+		else:
+			# Case: mid lies after peak element 
+			r = mid
+		
+	
+			
+			
+		
+
+
+
+
+
