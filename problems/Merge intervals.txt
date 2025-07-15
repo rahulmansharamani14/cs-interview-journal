@@ -1,0 +1,60 @@
+Question:
+Given an array of intervals where intervals[i] = [starti, endi], merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
+
+ 
+
+Example 1:
+
+Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+Output: [[1,6],[8,10],[15,18]]
+Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
+Example 2:
+
+Input: intervals = [[1,4],[4,5]]
+Output: [[1,5]]
+Explanation: Intervals [1,4] and [4,5] are considered overlapping.
+ 
+
+Constraints:
+
+1 <= intervals.length <= 104
+intervals[i].length == 2
+0 <= starti <= endi <= 104
+
+-------------------------------------------------------------------
+
+Initial Thoughts/Clarifying Questions:
+- Are the intervals all inclusive? Do we want to merge in case of [1,2] and [2,3] to [1,3]? I'm assuming yes
+- Do we want to return a new list? I'm assuming yes
+
+Approaches:
+
+Approach 1:
+- We can first sort the intervals based on their start time.
+- Then we can traverse through the intervals list and check the conditions for every two intervals:
+		- if the start time of next interval is smaller then or equal to the end time of current interval, then we merge it and the final interval would be start of current and end of next
+		- else we don't merge and move forward
+- But we need to make sure if the next interval exist (in case of the last interval or when there is only 1 interval)
+
+TC: O(nlogn + n) = O(nlogn)
+SC: O(1)
+
+Code:
+
+def merge(self, intervals: List[List[int]]) -> List[List[int]]:
+
+	# Sort the intervals based on start time
+	intervals.sort()
+	
+	res: List[List[int]] = [intervals[0]]
+	
+	for i in range(1, len(intervals)):
+		#Condition to merge interval		
+		if intervals[i][0] <= res[-1][1]:
+			res[-1] = [res[-1][0], max(intervals[i][1], res[-1][1])]
+		else:
+			res.append([intervals[i][0], intervals[i][1]])
+	
+	return res
+	
+
