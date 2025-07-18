@@ -1,0 +1,66 @@
+
+# # Prefix Suffix Swap
+
+# We are given an array of letters, `arr`, with a length, `n`, which is a multiple of `3`. The goal is to modify `arr` in place to move the prefix of length `n/3` to the end and the suffix of length `2n/3` to the beginning.
+
+# ```
+# Example 1:
+# Input: arr = ['b', 'a', 'd', 'r', 'e', 'v', 'i', 'e', 'w']
+# Output: ['r', 'e', 'v', 'i', 'e', 'w', 'b', 'a', 'd']
+# Explanation: The first third (bad) moves to the end, while the rest (review) stays in order.
+
+# Example 2:
+# Input: arr = ['a', 'b', 'c']
+# Output: ['b', 'c', 'a']
+
+# Example 3:
+# Input: arr = []
+# Output: []
+# ```
+
+# Constraints:
+# - The length of arr is divisible by 3
+# - 0 ≤ arr.length ≤ 10^6
+# - arr[i] is a letter
+
+
+from collections.abc import Reversible
+from typing import List
+
+def swap(arr, i , j):
+    temp = arr[i]
+    arr[i] = arr[j]
+    arr[j] = temp
+
+
+# Approach 1
+# def prefixSuffixSwap(arr: List[int]) -> None:
+#     n = len(arr)
+#     p1, p2 = n//3, (2*n)//3
+
+#     #Swap first n/3 elements to middle n/3 elements
+#     for i in range(p1):
+#         swap(arr, i, p1 + i)
+
+#     #Swap middle n/3 elements to last n/3 elements
+#     for i in range(p1, p2):
+#         swap(arr, i, i - p1 + p2)
+
+def reverseArray(arr, i , j):
+    while i < j:
+        swap(arr, i , j)
+        i += 1
+        j -= 1
+
+#Approach 2:
+def prefixSuffixSwap(arr: List[int]) -> None:
+    n = len(arr)
+    #reverse entire array
+    reverseArray(arr, 0, n - 1)
+
+    #reverse first 2n/3 part
+    reverseArray(arr, 0 , (2*n) // 3 - 1)
+
+    #reverse last n/3 part
+    reverseArray(arr, (2*n)// 3, n - 1)
+
