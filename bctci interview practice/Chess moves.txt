@@ -1,0 +1,151 @@
+# # Chess Moves
+
+
+# For context, this is how the King, Knight, and Queen move on a chessboard:
+
+# https://iio-beyond-ctci-images.s3.us-east-1.amazonaws.com/chess-moves-1.png
+
+# The king can go to any adjacent cell, including diagonals. The knight 'jumps' one cell in one dimension and two in the other, even if there are pieces in between. The queen can move *any number of cells* in any direction, including diagonals, but cannot go through occupied cells.
+
+# We are given three inputs:
+
+# - `board`, an `nxn` binary grid, where a `0` denotes an empty cell, `1` denotes an occupied cell (for this problem, it doesn't matter what piece is in it)
+# - `piece`, which is one of `"king"`, `"knight"`, or `"queen"`
+# - `r` and `c`, with `0 ≤ r < n` and `0 ≤ c < n`, which denote an unoccupied position in the board
+
+# Return a list of all the **unoccupied** cells in `board` that can be reached by the given `piece` in one move starting from `[r, c]`. The order of the output cells does not matter.
+
+# ```
+# Example 1:
+# board = [[0, 0, 0, 1, 0, 0],
+#          [0, 1, 1, 1, 0, 0],
+#          [0, 1, 0, 1, 1, 0],
+#          [1, 1, 1, 1, 0, 0],
+#          [0, 0, 0, 0, 0, 0],
+#          [0, 1, 0, 0, 0, 0]]
+# piece = "king"
+# r = 3
+# c = 5
+# Output: [[2, 5], [3, 4], [4, 4], [4, 5]]
+
+# Example 2:
+# board = [[0, 0, 0, 1, 0, 0],
+#          [0, 1, 1, 1, 0, 0],
+#          [0, 1, 0, 1, 1, 0],
+#          [1, 1, 1, 1, 0, 0],
+#          [0, 0, 0, 0, 0, 0],
+#          [0, 1, 0, 0, 0, 0]]
+# piece = "knight"
+# r = 4
+# c = 3
+# Output: [[2, 2], [3, 5], [5, 5]]
+
+# Example 3:
+# board = [[0, 0, 0, 1, 0, 0],
+#          [0, 1, 1, 1, 0, 0],
+#          [0, 1, 0, 1, 1, 0],
+#          [1, 1, 1, 1, 0, 0],
+#          [0, 0, 0, 0, 0, 0],
+#          [0, 1, 0, 0, 0, 0]]
+# piece = "queen"
+# r = 4
+# c = 4
+# Output: [[3, 4], [3, 5], [4, 0], [4, 1], [4, 2], [4, 3], [4, 5], [5, 3], [5, 4], [5, 5]]
+# ```
+
+# https://iio-beyond-ctci-images.s3.us-east-1.amazonaws.com/chess-moves-2.png
+
+# Constraints:
+
+# - `1 ≤ n ≤ 100`
+# - `board[i][j]` is either `0` or `1`
+# - `0 ≤ r, c < n`
+# - `piece` is one of `"king"`, `"knight"`, or `"queen"`
+
+
+Code: 
+# TC: O(n^2) in worst case
+#SC: O(n^2) in worst case (if we assume the output list has additional space)
+from typing import List
+
+def valid_move(board: List[List[int]], r: int, c: int):
+    return r >= 0 and r < len(board) and c >= 0 and c < len(board[0]) and board[r][c] == 0
+
+def chess_moves(board: List[List[int]], piece: str, r: int, c: int) -> List[List[int]]:
+    output: List[List[int]] = []
+
+
+    if(piece == "king"):
+        directions = [(-1,0), (0,1), (1,0), (0,-1), (-1,1), (1,1), (1,-1), (-1,-1)]
+        for dr, dc in directions:
+            new_r = r + dr
+            new_c = c + dc
+            if valid_move(board, new_r, new_c):
+                output.append([new_r,new_c])
+
+    elif(piece == "knight"):
+        directions = [(-1,2), (1,2), (2,1), (-2,1), (2,-1), (-2,-1), (1,-2), (-1,-2)]
+        for dr, dc in directions:
+            new_r = r + dr
+            new_c = c + dc
+            if valid_move(board, new_r, new_c):
+                output.append([new_r,new_c])
+       
+    else:
+        directions = [(-1,0), (0,1), (1,0), (0,-1), (-1,1), (1,1), (1,-1), (-1,-1)]
+        for dr, dc in directions:
+            new_r = r + dr
+            new_c = c + dc
+            while valid_move(board, new_r, new_c):
+                output.append([new_r,new_c])
+                new_r += dr
+                new_c += dc
+
+
+    return output
+
+
+def run_tests():
+  tests = [
+      # Example 1 from the book - king moves
+      ([[0, 0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0, 0],
+        [0, 1, 0, 1, 1, 0],
+        [1, 1, 1, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0]], "king", 3, 5,
+          [[2, 5], [3, 4], [4, 4], [4, 5]]),
+      # Example 2 from the book - knight moves
+      ([[0, 0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0, 0],
+        [0, 1, 0, 1, 1, 0],
+        [1, 1, 1, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0]], "knight", 4, 3,
+       [[2, 2], [3, 5], [5, 5]]),
+      # Example 3 from the book - queen moves
+      ([[0, 0, 0, 1, 0, 0],
+        [0, 1, 1, 1, 0, 0],
+        [0, 1, 0, 1, 1, 0],
+        [1, 1, 1, 1, 0, 0],
+        [0, 0, 0, 0, 0, 0],
+        [0, 1, 0, 0, 0, 0]], "queen", 4, 4,
+       [[3, 4], [3, 5], [4, 0], [4, 1], [4, 2], [4, 3], [4, 5],
+        [5, 3], [5, 4], [5, 5]]),
+      # Edge case - 1x1 board
+      ([[0]], "queen", 0, 0, []),
+      # Edge case - all occupied except current position
+      ([[1, 1], [1, 0]], "knight", 1, 1, []),
+  ]
+
+  for board, piece, r, c, want in tests:
+    got = chess_moves(board, piece, r, c)
+    # Sort both lists for consistent comparison
+    got.sort()
+    want.sort()
+    print("got: ", got)
+    print("want", want)
+    if got == want: (f"\nchess_moves({board}, {piece}, {r}, {c}): " f"got: {got}, want: {want}\n")
+
+
+run_tests()
