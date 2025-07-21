@@ -1,0 +1,100 @@
+
+# # Queen's Reach
+
+
+# Imagine that an `n x n` chessboard has a number of queens in it. Remember that in chess, a queen can move any number of cells horizontally, vertically, or diagonally.
+
+# We are given an `nxn` binary grid, `board`, with `n > 0`, where `0` indicates that the cell is unoccupied, and a `1` indicates a queen (the color of the queen doesn't matter). Return a binary board with the same dimensions. In the returned board, `0` denotes that a cell is 'safe', and a `1` denotes that a cell is not safe. A cell is _safe_ if there isn't a queen in it and no queen on the board can reach it in a single move.
+
+# ```
+# Example 1:
+# board = [[0, 0, 0, 1],
+#          [0, 0, 0, 0],
+#          [0, 0, 0, 0],
+#          [1, 0, 0, 0]]
+# Output: [[1, 1, 1, 1],
+#          [1, 0, 1, 1],
+#          [1, 1, 0, 1],
+#          [1, 1, 1, 1]]
+
+# Example 2:
+# board = [[1]]
+# Output: [[1]]
+# Explanation: The only cell has a queen, so it's not safe.
+
+# Example 3:
+# board = [[0]]
+# Output: [[0]]
+# Explanation: With no queens, all cells are safe.
+# ```
+
+# https://iio-beyond-ctci-images.s3.us-east-1.amazonaws.com/queens-reach-1.png
+
+# Constraints:
+
+# - `1 ≤ n ≤ 100`
+# - `board[i][j]` is either `0` or `1`
+
+
+
+Code: 
+
+
+from typing import List
+
+def valid_move(r: int, c: int, output: List[List[int]]) -> bool:
+    return r >= 0 and r < len(output) and c >= 0 and c < len(output[0]) and output[r][c] == 0
+
+def queensMove(r: int, c: int, output: List[List[int]]) -> None:
+    queens_directions = [(-1, 0), (0,1), (1,0), (0,-1), 
+                         (-1, 1), (1,1), (1,-1), (-1,-1)]
+
+    for dr, dc in queens_directions:
+        new_r = r + dr
+        new_c = c + dc
+        while valid_move(new_r, new_c, output):
+            output[new_r][new_c] = 1 #marking this position as unsafe as queen can reach here
+            new_r += dr
+            new_c += dc
+
+
+def queensReach(board: List[List[int]]) -> List[List[int]]:
+
+    # Create an n*n board filled with zeros
+    output: List[List[int]] = [[0]*len(board) for _ in range(len(board))]
+
+    #Identify Queens position
+    for r in range(len(board)):
+        for c in range(len(board)):
+            if board[r][c] == 1:
+                output[r][c] = 1 #marking this position as unsafe as queen found here
+                queensMove(r,c, output)
+
+    return output
+    
+def run_tests():
+  tests = [
+      ([[0, 0, 0, 1],
+        [0, 0, 0, 0],
+        [0, 0, 0, 0],
+        [1, 0, 0, 0]],
+       [[1, 1, 1, 1],
+        [1, 0, 1, 1],
+        [1, 1, 0, 1],
+        [1, 1, 1, 1]]),
+      # Edge case - empty board
+      ([], []),
+      # Edge case - 1x1 board with queen
+      ([[1]], [[1]]),
+      # Edge case - 1x1 board without queen
+      ([[0]], [[0]]),
+      # Edge case - no queens
+      ([[0, 0], [0, 0]], [[0, 0], [0, 0]]),
+  ]
+
+  for board, want in tests:
+    got = queensReach(board)
+    if got == want: print("safe_cells( ", board, "):, got: ", got, "want: ", want)
+
+run_tests()
+
