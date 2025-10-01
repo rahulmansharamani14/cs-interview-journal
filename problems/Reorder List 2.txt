@@ -1,0 +1,95 @@
+Question:
+You are given the head of a singly linked-list. The list can be represented as:
+
+L0 → L1 → … → Ln - 1 → Ln
+Reorder the list to be on the following form:
+
+L0 → Ln → L1 → Ln - 1 → L2 → Ln - 2 → …
+You may not modify the values in the list's nodes. Only nodes themselves may be changed.
+
+ 
+
+Example 1:
+
+
+Input: head = [1,2,3,4]
+Output: [1,4,2,3]
+Example 2:
+
+
+Input: head = [1,2,3,4,5]
+Output: [1,5,2,4,3]
+ 
+
+Constraints:
+
+The number of nodes in the list is in the range [1, 5 * 104].
+1 <= Node.val <= 1000
+----------------------------------
+
+Initial Thoughts/Questions:
+
+
+Approaches:
+
+Approach:
+- We can break the list into two sublist and reverse the 2nd list. Now all is left are two list from which we can build our final reordered list.
+- Steps we can take:
+	- Find the middle element of the original list by using fast/slow pointers (O(n))
+	- Reverse the 2nd half of the list by using a dummy Node (O(n/2))
+	- Take the head of both the list (1st half and the reversed 2nd half), build the reorderd list by moving pointers and essentially using dummy nodes if needed (O(n))
+	
+TC: O(n): linear
+SC: O(1): constant as we are using bunch of dummy nodes and extra pointers  
+
+Code:
+
+def reorderList(head: Optional[ListNode]) -> None:
+	#find the middle Node
+	slow = head
+	fast = head.next
+	
+	while fast and fast.next:
+		slow = slow.next
+		fast = fast.next.next
+	
+	second = slow.next
+	slow.next = None
+	
+	#reverse the 2nd half
+	second_head = reverseList(second)
+	
+	
+	#Merge two lists
+	first_head = head
+	
+	curr1, curr2 = head, second_head
+	
+	while curr1 and curr2:
+		temp1, temp2 = curr1.next, curr2.next
+		
+		curr1.next = curr2
+		curr2.next = temp1
+		
+		curr1 = temp1
+		curr2 = temp2
+		
+		
+	
+	
+	
+def reverseList(head):
+	prev = None
+	curr = head
+	
+	while curr:
+		temp = curr.next
+		curr.next = prev
+		prev = curr
+		curr = temp
+	return prev
+	
+		
+	
+	
+	

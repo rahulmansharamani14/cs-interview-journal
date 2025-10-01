@@ -63,7 +63,7 @@ Approach 2:
  	n = len(nums)
  	def findPivot():
  		left, right = 0, n - 1
- 		while left< right:
+ 		while left < right:
  			mid = left + (right - left) // 2
  			
  			if nums[mid] > nums[right]:

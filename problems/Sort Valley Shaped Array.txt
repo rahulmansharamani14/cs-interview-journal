@@ -1,0 +1,66 @@
+
+# # Sort Valley Shaped Array
+
+# A *valley-shaped* array is an array of integers such that:
+
+# - It can be split into a non-empty prefix and a non-empty suffix
+# - The prefix is sorted in decreasing order (duplicates allowed)
+# - The suffix is sorted in increasing order (duplicates allowed)
+
+# Given a valley-shaped array, `arr`, return a new array with the elements sorted.
+
+# ```
+# Example 1: arr = [8, 4, 2, 6]
+# Output:  [2, 4, 6, 8]
+# Explanation: Note that the decreasing prefix is not necessarily unique. The decreasing prefix could be [8, 4] or [8, 4, 2]. The corresponding increasing suffixes would be [2, 6] or [6].
+
+# Example 2: arr = [1, 2]
+# Output:  [1, 2]. The array is already sorted (the decreasing prefix is just [1]).
+
+# Example 3: arr = [2, 2, 1, 1]
+# Output:  [1, 1, 2, 2]
+# ```
+
+# Constraints:
+
+# - 0 ≤ arr.length ≤ 10^6
+# - -10^9 ≤ arr[i] ≤ 10^9
+
+def sortValleyShapedArray(arr: list[int]) -> list[int]:
+    res = []
+    split_index = 0
+
+    #Identify the split (where the prefix ends and suffix starts)
+    for i in range(len(arr) - 1):
+        if arr[i + 1] > arr[i]:
+            split_index = i + 1
+            break
+
+    #If split_index is not updated at this point, that means the input array is already sorted in stricly decreasing order
+    if split_index == 0:
+        split_index = len(arr) - 1
+
+    # Place prefix and suffix pointers based on split_index
+    prefix_pointer = split_index - 1
+    suffix_pointer = split_index
+
+    # Move prefix pointer in reverse direction and suffix pointer in forward direction
+    while prefix_pointer >= 0 and suffix_pointer <= len(arr) - 1:
+        if arr[prefix_pointer] < arr[suffix_pointer]:
+            res.append(arr[prefix_pointer])
+            prefix_pointer -= 1
+        else:
+            res.append(arr[suffix_pointer])
+            suffix_pointer += 1
+    
+    # Check if there are some elements left in prefix part of array
+    while prefix_pointer >= 0:
+        res.append(arr[prefix_pointer])
+        prefix_pointer -= 1
+    
+    # Check if there are some elements left in suffix part of array
+    while suffix_pointer <= len(arr) - 1:
+        res.append(arr[suffix_pointer])
+        suffix_pointer += 1
+
+    return res
