@@ -1,0 +1,123 @@
+"""Design a logger system that receives a stream of messages along with their timestamps. Each unique message should only be printed at most every 10 seconds (i.e. a message printed at timestamp t will prevent other identical messages from being printed until timestamp t + 10).
+
+All messages will come in chronological order. Several messages may arrive at the same timestamp.
+
+Implement the Logger class:
+
+Logger() Initializes the logger object.
+bool shouldPrintMessage(int timestamp, string message) Returns true if the message should be printed in the given timestamp, otherwise returns false.
+
+
+Example 1:
+
+Input
+["Logger", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage", "shouldPrintMessage"]
+[[], [1, "foo"], [2, "bar"], [3, "foo"], [8, "bar"], [10, "foo"], [11, "foo"]]
+Output
+[null, true, true, false, false, false, true]
+
+Explanation
+Logger logger = new Logger();
+logger.shouldPrintMessage(1, "foo");  // return true, next allowed timestamp for "foo" is 1 + 10 = 11
+logger.shouldPrintMessage(2, "bar");  // return true, next allowed timestamp for "bar" is 2 + 10 = 12
+logger.shouldPrintMessage(3, "foo");  // 3 < 11, return false
+logger.shouldPrintMessage(8, "bar");  // 8 < 12, return false
+logger.shouldPrintMessage(10, "foo"); // 10 < 11, return false
+logger.shouldPrintMessage(11, "foo"); // 11 >= 11, return true, next allowed timestamp for "foo" is 11 + 10 = 21
+
+- How many message I can expect around the same time?
+
+
+Approach:
+We can maintian a list of all the messages along with their next allowed time which will be updated if the message is allowed to print.
+The structure would be as simple as
+messages = [["message 1", nextallowedtime: int]]
+
+TC: O(n) to find the message
+SC: O(n) where n is no of messages
+"""
+
+
+
+
+# class Logger:
+#     def __init__(self) -> None:
+#         self.messages: list[list] = []
+
+#     def shouldPrintMessage(self, timestamp: int, message: str) -> bool:
+
+#         for message_entry in self.messages:
+#             if message_entry[0] == message: # message found
+#                 if timestamp < message_entry[1]: # print message not All
+#                     return False
+
+#                 # print message not All and compute next allowed time
+#                 message_entry[1] = timestamp + 10
+#                 return True
+
+#         #store new message with next allowed time
+#         timestamp += 10
+#         self.messages.append([message, timestamp])
+#         return True
+
+
+# def main():
+#     logger = Logger()
+#     assert logger.shouldPrintMessage(1, "foo") == True
+#     assert logger.shouldPrintMessage(2, "bar") == True
+#     assert logger.shouldPrintMessage(3, "foo") == False
+#     assert logger.shouldPrintMessage(8, "bar") == False
+#     assert logger.shouldPrintMessage(10, "foo") == False
+#     assert logger.shouldPrintMessage(11, "foo") == True
+
+#     print("All test cases passed")
+
+# if __name__ == "__main__":
+#     main()
+
+
+
+"""
+Approach 2: We can optimize this further using a Hashmap. Storing Messages as key and the next allowed time as value.
+
+TC: O(1)
+SC: O(n) where n is number of messages
+
+"""
+
+
+class Logger:
+    def __init__(self) -> None:
+        self.messages: dict[str, int] = {}
+
+    def shouldPrintMessage(self, timestamp: int, message: str) -> bool:
+        if message not in self.messages: # message does not exit, new message added
+            self.messages[message] = timestamp + 10
+            return True
+
+        #message found
+        existing_timestamp = self.messages[message]
+        if timestamp < existing_timestamp:
+            # print message not allowed
+            return False
+
+        self.messages[message] = timestamp + 10 #message updated
+        return True
+
+
+
+
+
+def main():
+    logger = Logger()
+    assert logger.shouldPrintMessage(1, "foo") == True
+    assert logger.shouldPrintMessage(2, "bar") == True
+    assert logger.shouldPrintMessage(3, "foo") == False
+    assert logger.shouldPrintMessage(8, "bar") == False
+    assert logger.shouldPrintMessage(10, "foo") == False
+    assert logger.shouldPrintMessage(11, "foo") == True
+
+    print("All test cases passed")
+
+if __name__ == "__main__":
+    main()

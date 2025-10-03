@@ -1,0 +1,137 @@
+"""
+Design a hit counter which counts the number of hits received in the past 5 minutes (i.e., the past 300 seconds).
+
+Your system should accept a timestamp parameter (in seconds granularity), and you may assume that calls are being made to the system in chronological order (i.e., timestamp is monotonically increasing). Several hits may arrive roughly at the same time.
+
+Implement the HitCounter class:
+
+HitCounter() Initializes the object of the hit counter system.
+void hit(int timestamp) Records a hit that happened at timestamp (in seconds). Several hits may happen at the same timestamp.
+int getHits(int timestamp) Returns the number of hits in the past 5 minutes from timestamp (i.e., the past 300 seconds).
+
+
+Example 1:
+
+Input
+["HitCounter", "hit", "hit", "hit", "getHits", "hit", "getHits", "getHits"]
+[[], [1], [2], [3], [4], [300], [300], [301]]
+Output
+[null, null, null, null, 3, null, 4, 3]
+
+Explanation
+HitCounter hitCounter = new HitCounter();
+hitCounter.hit(1);       // hit at timestamp 1.
+hitCounter.hit(2);       // hit at timestamp 2.
+hitCounter.hit(3);       // hit at timestamp 3.
+hitCounter.getHits(4);   // get hits at timestamp 4, return 3.
+hitCounter.hit(300);     // hit at timestamp 300.
+hitCounter.getHits(300); // get hits at timestamp 300, return 4.
+hitCounter.getHits(301); // get hits at timestamp 301, return 3.
+
+
+[1, 2, 3, 4, 300, 301]
+
+- How many calls we can expect at most?
+
+
+Approach 1:
+We can maintain a queue to track all the hits. So we store the timestamp directly in the queue. Each timestamp will represent one hit. And every time we get a hit, we can check the difference between right most element and the left most element, if it is greater than 300, we pop out the left most hit. We do this till the diff is <= 300 (to maintian last 5min window).
+
+To return no of hit in last 300 sec, we would simply return the length of the queue.
+
+TC: each hit() call would take O(1) time ; each getHits() call would take O(N) time in worst case with N is no of timestamp
+SC: O(N) in the worst case
+"""
+
+# from collections import deque
+
+# class HitCounter:
+#     def __init__(self) -> None:
+#         self.queue: deque[int] = deque()
+
+#     def hit(self, timestamp: int) -> None:
+#         self.queue.append(timestamp)
+
+#     def getHits(self, timestamp: int) -> int:
+#         while len(self.queue):
+#             if timestamp - self.queue[0] >= 300:
+#                 self.queue.popleft()
+#             else:
+#                 break
+
+#         return len(self.queue)
+
+
+# def main():
+
+#     hitCounter = HitCounter()
+#     hitCounter.hit(1)
+#     hitCounter.hit(2)
+#     hitCounter.hit(3)
+#     assert hitCounter.getHits(4) == 3
+#     hitCounter.hit(300)
+#     assert hitCounter.getHits(300) == 4
+#     assert hitCounter.getHits(301) == 3
+
+#     print("All tests passed")
+
+# if __name__ =="__main__":
+#     main()
+
+
+"""
+Follow up: What if the number of hits per second could be huge? Does your design scale?
+
+
+Approach 2:
+We could also store the no of calls with each timestamp so that getHist() call would(1) time operation. This would certainly increase the space but would be time  efficient.
+
+
+"""
+
+
+from collections import deque
+
+class HitCounter:
+    def __init__(self) -> None:
+        self.hits: deque = deque()
+        self.total_hits = 0
+
+    def hit(self, timestamp: int) -> None:
+        for pair in self.hits:
+            if pair[0] == timestamp:
+                pair[1] += 1
+                self.total_hits += 1
+                return
+
+        self.hits.append([timestamp, 1])
+        self.total_hits += 1
+
+
+    def getHits(self, timestamp: int) -> int:
+        while len(self.hits):
+            diff = timestamp - self.hits[0][0]
+            if diff >= 300:
+                self.total_hits -= self.hits[0][1]
+                self.hits.popleft()
+            else:
+                break
+
+        return self.total_hits
+
+
+def main():
+
+    hitCounter = HitCounter()
+    hitCounter.hit(1)
+    hitCounter.hit(2)
+    hitCounter.hit(3)
+    assert hitCounter.getHits(4) == 3
+    hitCounter.hit(300)
+    assert hitCounter.getHits(300) == 4
+    assert hitCounter.getHits(301) == 3
+
+    print("All tests passed")
+
+if __name__ =="__main__":
+    main()

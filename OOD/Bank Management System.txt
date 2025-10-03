@@ -1,0 +1,4 @@
+Design a bank management system
+- Customer Creation
+- Transfer money through account id
+- Check balance and check transaction history (with pagination)
