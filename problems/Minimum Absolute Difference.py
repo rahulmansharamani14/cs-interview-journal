@@ -25,7 +25,7 @@
 '''
 Approach 1: Sorting the input, computing min_difference in one pass and return all the pairs of absolute difference equal to min_difference
 TC: O(nlogn + 2n) ~ O(nlogn)
-SC: O(1)
+SC: O(n)
 '''
 
 
@@ -47,26 +47,31 @@ SC: O(1)
     
 '''
 Approach 2: Sorting the input and Using a Hashmap to store all pairs with thier absolute difference
+TC: O(nlogn + n)
+SC: O(2n)
 '''
 
-# def minAbsDifference(arr: list[int]) -> list[list[int]]:
-#     arr.sort()
+def minAbsDifference(arr: list[int]) -> list[list[int]]:
+    arr.sort()
 
-#     diff_map = dict() 
+    diff_map = dict() 
+    min_diff = arr[1] - arr[0]
 
-#     for i in range(len(arr) - 1):
-#         diff = arr[i+1] - arr[i]
-#         if diff in diff_map:
-#             diff_map[diff].append([arr[i], arr[i+1]])
-#         else:
-#             diff_map[diff] = [[arr[i], arr[i+1]]]
+    for i in range(len(arr) - 1):
+        diff = arr[i+1] - arr[i]
+
+        if min_diff > diff:
+            min_diff = diff
+
+
+        if diff in diff_map:
+            diff_map[diff].append([arr[i], arr[i+1]])
+        else:
+            diff_map[diff] = [[arr[i], arr[i+1]]]
     
-#     min_key = float('inf')
 
-#     for key in diff_map:
-#         min_key = min(min_key, key)
 
-#     return diff_map[min_key]
+    return diff_map[min_diff]
     
 
 
@@ -75,27 +80,27 @@ Approach 2: Sorting the input and Using a Hashmap to store all pairs with thier 
 '''
 Approach 3: One Pass Solution: Compute 1st pair absolute difference and check if any future aboslute diff is less than this, start the res list from that pair
 TC: O(nlogn + n)
-SC; O(1)
+SC; O(n)
 
 '''
 
-def minAbsDifference(arr: list[int]) -> list[list[int]]:
-    arr.sort() #[1,2,3,4]
+# def minAbsDifference(arr: list[int]) -> list[list[int]]:
+#     arr.sort() #[1,2,3,4]
 
-    min_difference = arr[1] - arr[0]
+#     min_difference = arr[1] - arr[0]
 
-    res = []
+#     res = []
 
-    for i in range(len(arr) - 1):
-        if min_difference == arr[i + 1] - arr[i]:
-            res.append([arr[i], arr[i+1]])
+#     for i in range(len(arr) - 1):
+#         if min_difference == arr[i + 1] - arr[i]:
+#             res.append([arr[i], arr[i+1]])
         
-        if min_difference > arr[i + 1] - arr[i]:
-            min_difference = arr[i + 1] - arr[i]
-            res = [[arr[i], arr[i+1]]]
+#         if min_difference > arr[i + 1] - arr[i]:
+#             min_difference = arr[i + 1] - arr[i]
+#             res = [[arr[i], arr[i+1]]]
 
 
-    return res
+#     return res
 
 
 
