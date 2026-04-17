@@ -47,7 +47,7 @@ def findOrder(numCourses: int, prerequisites: list[list[int]]) -> list[int]:
 	prereq_graph = defaultdict(list)
 	
 	for course, preReq in prerequisites:
-		prereq_graph[course].append(preReq)
+		prereq_graph[preReq].append(course)
 	
 	
 	result = []
@@ -82,6 +82,49 @@ def findOrder(numCourses: int, prerequisites: list[list[int]]) -> list[int]:
 	return result
 	
 
+"""
+Approach 2: Using BFS (Topological Sort)
+more intuitive
+
+TC: O(V + E)
+SC: O(V + E)
+"""
+
+from collections import defaultdict, deque
+
+
+def findOrder(numCourses: int, prerequisites: list[list[int]]) -> list[int]:
+	
+	result = []
+	
+	#build ajdacency list
+	prereq_graph = defaultdict(list)
+	course_indegree = [0] * numCourses
+	
+	for course, prereq in prerequisites:
+		prereq_graph[prereq].append(course)
+		course_indegree[course] += 1
+	
+	queue = deque()
+	
+	for i in range(len(course_indegree)):
+		if not course_indegree[i]:
+			queue.append(i)
+			
+	while queue:
+		course = queue.popleft()
+		result.append(course)
+		
+		for prereq in prereq_graph[course]:
+			course_indegree[prereq] -= 1
+			if not course_indegree[prereq]:
+				queue.append(prereq)
+			
+	if len(result) == numCourses:
+		return result
+	
+	return []
+		
 
 
 
