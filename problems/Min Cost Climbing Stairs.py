@@ -58,6 +58,31 @@ def minCostClimbingStairs(cost: list[list[int]]) -> int:
 		min_cost[i] = min(min_cost[i - 1], min_cost[i - 2]) + cost[i]
 	
 	return min(min_cost[n - 1], min_cost[n - 2])
+	
+	
+"""
 
+Further Optimization on Tabulation
 
+TC: O(n)
+SC: O(1)
+"""
+
+def minCostClimbingStairs(cost: list[list[int]]) -> int:
+
+	
+	n = len(cost)
+	
+	min_cost = [0] * n
+	
+	#initialize base values
+	secondlast_min_cost, last_min_cost = cost[0], cost[1]
+	
+	#general case
+	for i in range(2, n):
+		curr_min_cost = min(secondlast_min_cost, last_min_cost) + cost[i]
+		secondlast_min_cost = last_min_cost
+		last_min_cost = curr_min_cost
+	
+	return min(secondlast_min_cost, last_min_cost)
 
