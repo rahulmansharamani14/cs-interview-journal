@@ -51,7 +51,7 @@ Approach 2: Dynamic Programmin (Top Down) - Recursion with Memoization
 Key optimization idea: Store repeated computation in some kind of data structure
 
 TC: O(n)
-SC: O(n)
+SC: O(n) for memo hashmap (memoization part) + O(n) for recursion depth -> O(n)
 """
 
 def climbStairs(n : int) -> int:
@@ -74,5 +74,31 @@ def climbStairs(n : int) -> int:
 		
 	return climbStairs_rec(n)
 	
+
+"""
+Approach 3: Dynamic Programming (Bottom Up) without recursion - Tabulation
+
+Key optimization idea: we can replace top down recursive part with bottom up by using array and loops
+
+TC: O(n)
+SC: O(n) -> only for dp array (tabulation part)
+"""
+
+def climbStairs(n : int) -> int:
+
+	#define dp array
+	dp = [0] * (n + 1)
+	
+	if n == 1: return 1
+	if n == 2: return 2
+	
+	#base case
+	dp[1], dp[2] = 1, 2
+	
+	#general case
+	for i in range(3, n + 1):
+		dp[i] = dp[i - 1] + dp[i - 2]
+	
+	return dp[n]
 
 
